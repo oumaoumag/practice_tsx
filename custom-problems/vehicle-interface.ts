@@ -36,14 +36,14 @@
 // - Optional properties and methods
 
 interface Vehicle {
-    name: string;
+    make: string;
     model: string;
     year: number;
     getInfo(): string;
 }
 
 interface Drivable {
-    drived(distance: number): string;
+    drive(distance: number): string;
     stop(): string;
 }
 
@@ -53,6 +53,55 @@ interface ElectricVehicle extends Vehicle, Drivable {
     charge(amount: number): string;
 }
 
-class ElectricCar {
+class ElectricCar implements ElectricVehicle {
+    // properties from Vehicle
+    make: string;
+    model: string;
+    year: number;
+
+    //properties from ElectricVehicle
+    batteryCapacity: number;
+    range: number; 
+
+     constructor(
+        make: string,
+        model: string,
+        year: number,
+        batteryCapacity: number,
+        range: number,
+    ) {
+        this.make = make; 
+        this.model = model;
+        this.year = year;
+        this.batteryCapacity = batteryCapacity;
+        this.range = range;
+    }
+
+    // Method from Vehicle
+    getInfo(): string {
+        return `${this.make} ${this.model} (${this.year}) - Range: ${this.range} miles`;
+    }
+
+    // Method from Drivable
+    drive(distance: number): string {
+    if (distance > this.range) {
+        return `Cannot drive ${distance} miles - only ${this.range} miles of range left`
+    }
     
+        this.range -= distance;
+        return `Drove ${distance} miles - ${this.range} miles of range left`;
+}
+
+    stop(): string {
+        return `${this.make} ${this.model} has stopped`
+    }
+
+    // Method from ElectricVehicle
+    charge(amount: number): string {
+        // Assuming amount is in kWh and each kWh gives 4 miles of range
+        const rangeAdded = amount * 4; 
+        this.range += rangeAdded;
+        return `Added ${rangeAdded} miles of range by charging ${amount} kWh`;
+    }
+
 } 
